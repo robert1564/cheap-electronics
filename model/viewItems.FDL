@@ -21,4 +21,20 @@ heading "View Items"
 
     #endif /* emptyProductsResult */
   }
+
+  sequence "Browse Items" {
+    NavigateToProductsPage: "User" => "Products Page"
+    RequestAllProductsList: "Products Page" -> "Products Server"
+    GetAllProducts: "Products Server" -> "Database"
+    ReturnAllProducts(products): "Products Server" <- "Database"
+    ReturnProductsList: "Products Page" <- "Products Server"
+    
+    #ifndef emptyProductArray
+      DisplayProducts: "Products Page" -> "Products Page"
+
+    #else
+      DisplayErr: "Products Page" -> "Products Page"
+
+    #endif /* emptyProductArray */
+  }
 }
