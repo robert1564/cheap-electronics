@@ -87,4 +87,23 @@ heading "View Items"
 
     #endif /* userValid */
   }
+
+  sequence "Add to shopping cart" {
+    ClickShoppingCartButtonOnProduct: "Registered Customer" -> "Products Page"
+    RequestAddProductToShoppingCard(product): "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid: "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+      AddProductToShoppingCart(product): "Products Server" -> "Database"
+      ReturnUserCart(items): "Products Server" <- "Database"
+      ReturnShoppingCartItems(items): "Products Server" -> "Products Page"
+      UpdateItemNumberIcon: "Products Page" -> "Products Page"
+
+    #else 
+      ReturnNotAuthorizedError: "Products Server" -> "Products Page"
+      DisplayErr: "Products Page" -> "Products Page"
+    #endif /* userInvalid */
+  }
 }
