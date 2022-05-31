@@ -18,6 +18,7 @@ heading "Authentication"
          RedirectUserToTheHomePage: "Login Page" -> "Home Page"
       #endif /* UserCredentialsError
        */
+       // test
    }
 
    sequence "Register" {
