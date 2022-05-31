@@ -1,0 +1,24 @@
+#include "project-inc.FDL"
+
+feature "View Items" {
+
+heading "View Items"
+
+  sequence "Search Items" {
+    EnterSearchTerm(term): "User" -> "Products Page"
+    PressOK: User -> "Products Page"
+    RequestProducts(term): "Products Page" -> "Products Server"
+    GetProductsMatchingTerm(term): "Products Server" -> "Database"
+    ReturnProducts(products): "Products Server" <- "Database"
+
+    #ifndef emptyProductsResult
+    SendProductsBack(products): "Products Server" -> "Products Page"
+    RenderProducts(products): "Products Page" -> "Products Page"
+    
+    #else 
+    SendProductsBack(empty array): "Products Server" -> "Products Page"
+    DisplayErr: "Products Page" -> "Products Page"
+
+    #endif /* emptyProductsResult */
+  }
+}
