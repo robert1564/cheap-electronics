@@ -23,7 +23,7 @@ heading "View Items"
   }
 
   sequence "Browse Items" {
-    NavigateToProductsPage: "User" => "Products Page"
+    NavigateToProductsPage: "User" -> "Products Page"
     RequestAllProductsList: "Products Page" -> "Products Server"
     GetAllProducts: "Products Server" -> "Database"
     ReturnAllProducts(products): "Products Server" <- "Database"
@@ -36,5 +36,55 @@ heading "View Items"
       DisplayErr: "Products Page" -> "Products Page"
 
     #endif /* emptyProductArray */
+  }
+
+  sequence "View Recommended Products" {
+    NavigateToProductsPage: "Registered Customer" -> "Products Page"
+    RequestRecommendedProducts: "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid(ok): "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+    GetRecommendedProductsSnapshot(user): "Products Server" -> "Database"
+    ReturnRecommendedProducts(products): "Products Server" <- "Database"
+    SendRecommendedProductsSnapshot(products): "Products Server" -> "Products Page"
+    
+      #ifndef noRecommended
+        DisplayRecommendedProductsCarousel: "Products Page" -> "Products Page"
+
+        ClickViewMore: "Registered Customer" -> "Products Page"
+        RedirectToRecommendedProducts: "Products Page" -> "Recommended Products Page"
+        GetAllRecommendedProductsRequest: "Recommended Products Page" -> "Products Server"
+        ValidateUserIsRegistered: "Products Server" -> "Authentication"
+        ValidateJWT: "Authentication" -> "Authentication"
+        UserValid(ok): "Authentication" -> "Products Server"
+
+        #ifndef userInvalid
+          GetAllRecommendedProducts: "Products Server" -> "Database"
+          ReturnAllRecommendedProducts(products): "Products Server" <- "Database"
+          SendAllRecommendedProducts(products): "Products Server" -> "Recommended Products Page"
+
+          #ifndef noProducts
+            DisplayRecommendedProducts: "Recommended Products Page" -> "Recommended Products Page"
+          #else 
+          #endif /* noProducts */
+
+        #else
+          ReturnUnauthorizedError: "Recommended Products Page" <- "Products Server"
+          DisplayErr: "Products Page" <- "Products Page"
+        #endif /* userValid */
+
+       
+
+      #endif /* noRecommended */
+
+    #else 
+    ReturnUnauthorizedError: "Products Page" <- "Products Server"
+    DisplayErr: "Products Page" <- "Products Page"
+
+
+
+    #endif /* userValid */
   }
 }
