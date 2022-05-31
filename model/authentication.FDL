@@ -21,19 +21,21 @@ heading "Authentication"
        // test
    }
 
-   sequence "Register" {
-      UserRegistartion: User -> "Registration Page"
-      VerifyInput: "Registration Page" -> Database
-      VerificationResult: "Registration Page" <- Database 
-
-      #ifdef ValidInput
-         AddNewUser: "Registration Page" -> Database
-         Redirection: "Registration Page" -> "Home Page"
-         
-      #else /* ValidInput
-       */
-         DisplayErr: User <- "Registration Page"
-      #endif /* ValidInput
-       */
+   sequence "Client Registration" {
+      GoToRegistrationPage: "Unregistered Customer" -> "Registration Page"
+      FillInUsername(username): "Unregistered Customer" -> "Registration Page"
+      FillInPassword(password): "Unregistered Customer" -> "Registration Page"
+      FillInConfirmPassword(confirmPassword): "Unregistered Customer" -> "Registration Page"
+      SubmitForm: "Unregistered Customer" -> "Registration Page"
+      ValidateInput: "Registration Page" -> "Authentication"
+      
+      #ifdef VALIDINPUT
+         CreateUser: "Authentication" -> "Database"
+         ReturnNewUser: "Authentication" <- "Database"
+         SetCookie(JWT): "Authentication" -> "Authentication"
+         Redirect: "Authentication" -> "Products Page"
+      #else 
+         DisplayErr: "Authentication" -> "Registration Page"
+      #endif /* VALIDINPUT */
    }
 }
