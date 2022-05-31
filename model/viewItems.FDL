@@ -106,4 +106,23 @@ heading "View Items"
       DisplayErr: "Products Page" -> "Products Page"
     #endif /* userInvalid */
   }
+
+  sequence "Add to Wishlist" {
+    ClickHeartButtonOnProduct: "Registered Customer" -> "Products Page"
+    RequestAddProductToWishlist(product): "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid: "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+      AddProductToWishlist(product): "Products Server" -> "Database"
+      ReturnUserWishlist(items): "Products Server" <- "Database"
+      ReturnWishlistItems(items): "Products Server" -> "Products Page"
+      UpdateWishlistItemNumberIcon: "Products Page" -> "Products Page"
+
+    #else 
+      ReturnNotAuthorizedError: "Products Server" -> "Products Page"
+      DisplayErr: "Products Page" -> "Products Page"
+    #endif /* userInvalid */
+  }
 }
