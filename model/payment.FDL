@@ -1,0 +1,23 @@
+#include "project-inc.FDL"
+
+feature "Payment" {
+
+    heading "Payment"
+    
+       sequence "Payment" {
+            AccesMeeting: User -> "Payment Page" 
+            SendData("for premium meetings"): "Payment Page" -> "Payment System"
+            OkData: "Payment Page" <- "Payment System"
+            PaymentDetails: User -> "Payment Page"
+            PaymentProcess: "Payment Page" -> "Payment System" 
+            PaymentProcess: "Payment System" -> Bank
+            OkProcess: "Payment System" <- Bank
+            OkProcess: "Payment Page" <- "Payment System"
+            ConfirmPayment: "Payment Page" -> "Payment System"
+            ConfirmPayment: "Payment System" -> Bank
+            Confirmated: "Payment System" <- Bank
+            Confirmated: "Payment Page" <- "Payment System"
+            AccesMeeting: User ->"Meeting Page" 
+            AccesMeetingAllowed: User <-"Meeting Page"
+       }
+}

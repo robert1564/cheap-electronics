@@ -1,0 +1,47 @@
+/* We start with defining the architecture. You may define as five tier architecture
+as demonstrated in this example. If your are modeling a less complex system,
+you may choose a 4, 3, 2 or 1 tier architecture. */
+
+/* Tier 5: System declaration */
+system: "Virtual Space Meeting"
+
+/* Tier 4: Subsystem declaration */
+subsystem: Server in "Virtual Space Meeting"
+subsystem: Actor in "Virtual Space Meeting"
+subsystem: Client in "Virtual Space Meeting"
+
+/* Tier 3: Module declaration  */
+module : "Database Module" in Server
+module : "Actor Module" in Actor
+module : "Web Server" in Server
+module : "Web Client" in Client
+module : "Bank Module" in Server
+
+/* Tier 2: Components are contained within modules  */
+component : "Database Component" in "Database Module" 
+component : "Bank Component" in "Bank Module"
+component : "Actor Component" in "Actor Module"
+component : "Authentication Component" in "Web Server"
+component : "Web Server Component" in "Web Server"
+component : "Web Client Component" in "Web Client"
+
+/* Tier 1: eternal and dynamic objects*/
+eternal : "User" in "Actor Component"
+eternal : "Authentication" in "Authentication Component"
+eternal : "Registration Page" in "Web Client Component"
+eternal : "Login Page" in "Web Client Component"
+eternal : "Home Page" in "Web Client Component"
+eternal : "Database" in "Database Component"
+eternal : "Management Server" in "Web Server Component"
+eternal : "BigBlueButton Server" in "Web Server Component"
+eternal : "Chat Interface" in "Web Client Component"
+eternal : "Payment Page" in "Web Client Component"
+eternal : "Bank" in "Bank Component"
+eternal : "Payment System" in "Web Server Component" 
+eternal : "Meeting Page" in "Web Client Component"
+
+
+/* Dynamic objects - Using dynamic to share a single axis between two entities
+                     You may use dynamic to model objects that are created
+                     and destroyed during the execution of a feature */
+dynamic : Session in "Database Component"

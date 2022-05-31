@@ -1,0 +1,10 @@
+/* Optional style and theme specification files to style the output. Choose from predefined files:
+aqua.FDL, business.FDL, chocolate.FDL, pastel.FDL, rainbow.FDL or sunrise.FDL.*/
+#include <pastel.FDL>  
+
+/* Default include file - Use include files to share common aspects of the model across multiple FDL files. */                           
+#include <inc.FDL>
+
+/* Architecture definitions are in a separate header file that is included in the
+FDL files with feature definitions. */
+#include <architecture.FDL>

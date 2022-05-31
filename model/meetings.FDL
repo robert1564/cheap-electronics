@@ -1,0 +1,31 @@
+#include "project-inc.FDL"
+
+feature "Meetings" {
+
+    heading "Meetings"
+    
+       sequence "Join Meetings" {
+        ViewActiveMeetings: User -> "Management Server"
+        GetMeetingsAPI: "Management Server" -> "BigBlueButton Server"
+        ReturnActiveMeetings(List): "Management Server" <- "BigBlueButton Server"
+        GetList("participants per meeting"): "Management Server" -> Database
+        ReturnList("participants per meeting"): "Management Server" <- Database
+        FilteredActiveMeeting(List): User <- "Management Server"
+        JoinMeeting: User -> "Management Server" 
+        CreateMeetingAPI: "Management Server" -> "BigBlueButton Server"
+        ReturnMeetingJoinURL: "Management Server" <- "BigBlueButton Server"
+        ReturnMeetingJoinURL: User <- "Management Server"
+        JoinMeetingUsingURL: User -> "BigBlueButton Server"
+          
+       }
+
+       sequence "Meeting Interaction" {
+           UserInteraction: User -> "BigBlueButton Server"
+           Return: User <- "BigBlueButton Server"
+       }
+
+       sequence "Left The Meeting" {
+           StopMeeting: "Management Server" <- "BigBlueButton Server"
+           UpdateMeetingInf: "Management Server" -> Database
+       }
+    }

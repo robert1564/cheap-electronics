@@ -1,0 +1,27 @@
+#include "project-inc.FDL"
+
+feature "Chat" {
+
+    heading "Chat"
+    
+       sequence "Access Chat" {
+            OpenChatInterface: User -> "Chat Interface" 
+            Request: "Chat Interface" -> "Management Server"
+            #ifdef Access
+                Connected: "Chat Interface" <- "Management Server"
+                AccName: User <- "Chat Interface"
+            #else /* AccRequest
+             */
+                NotConnected: "Chat Interface" <- "Management Server"
+                InformUser(message): User <- "Chat Interface"
+            #endif /* AccRequest
+             */
+       }
+
+       sequence "Create Message" {
+           WriteMessage: User -> "Chat Interface"
+           SendMessage: "Chat Interface" -> "Management Server"
+           RedirectMessage: "Chat Interface" <- "Management Server"
+           SeeChat: User <- "Chat Interface"
+       }
+}

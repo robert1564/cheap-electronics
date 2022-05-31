@@ -1,0 +1,38 @@
+#include "project-inc.FDL"
+
+feature "Authentication" {
+
+heading "Authentication"
+
+   sequence "Login" {
+
+      EnterUserCredidentials (username, password): User -> "Login Page"
+      SendUserInfo: "Login Page" -> Authentication
+      ValidateUserCredentials: Authentication -> Database
+
+      #ifdef UserCredentialsError
+         InvalidUserCredentials: "Login Page" <- Authentication
+         InformUnacceptedUser: User <- "Login Page"
+      #else 
+         UserLoginAcc: "Login Page" <- Authentication
+         RedirectUserToTheHomePage: "Login Page" -> "Home Page"
+      #endif /* UserCredentialsError
+       */
+   }
+
+   sequence "Register" {
+      UserRegistartion: User -> "Registration Page"
+      VerifyInput: "Registration Page" -> Database
+      VerificationResult: "Registration Page" <- Database 
+
+      #ifdef ValidInput
+         AddNewUser: "Registration Page" -> Database
+         Redirection: "Registration Page" -> "Home Page"
+         
+      #else /* ValidInput
+       */
+         DisplayErr: User <- "Registration Page"
+      #endif /* ValidInput
+       */
+   }
+}
