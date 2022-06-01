@@ -19,6 +19,10 @@
       "scenarioName": "View Items"
     },
     {
+      "modelPath": "model/productManagement.FDL",
+      "scenarioName": "Product Management"
+    },
+    {
       "modelPath": "model/meetings.FDL",
       "scenarioName": "Meetings"
     },
