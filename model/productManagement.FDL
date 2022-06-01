@@ -31,5 +31,31 @@ heading "Product Management"
     #endif /* invalidInput */
   }
 
+  sequence "Edit Product" {
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickEditProductButton: Admin -> "Dashboard Page"
+    NavigateToEditProductPage: "Dashboard Page" -> "Edit Product Page"
+    EditData(name,description,category, price, quantity,brand): Admin -> "Edit Product Page"
+  
+    #ifndef invalidInput
+      SubmitEditProduct(data): "Edit Product Page" -> "Products Server"
+      RequestValidateUserPermissions: "Products Server" -> "Authentication"
+      ValidateUserPermissions: "Authentication" -> "Authentication"
+   
+
+      #ifndef userHasNoPermission
+        PermissionsValid: "Products Server" <- "Authentication"
+        EditProductDb(data): "Products Server" -> "Database"
+        ReturnEditedProduct(product): "Products Server" <- "Database"
+        RedirectToDashboard: "Products Server" -> "Dashboard Page"
+
+      #else 
+        ReturnUnauthorisedError: "Products Server" -> "Add Product Page"
+        DisplayErr: "Add Products Page" -> "Add Products Page"
+      #endif /* userHasNoPermission */
+    #else
+      DisplayErr: "Add Product Page" -> "Add Product Page" 
+    #endif /* invalidInput */
+  }
 
 }
