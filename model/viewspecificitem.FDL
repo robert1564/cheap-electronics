@@ -39,6 +39,23 @@ heading "View Specific Product"
         #endif /* emptyProductReviews */
     } /* View Reviews */
 
+    sequence "Add To Cart" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickAddToCartButton: User -> "Specific Product Page"
+        RequestCartCreation: "Specific Product Page" -> "Cart Server"
+        PostCartData: "Cart Server" -> "Database"
+        ReturnCartData: "Cart Server" <- "Database"
+
+        #ifndef userNotAuthenticated
+            
+            DisplayMessage: "Navigation Bar" -> "Navigation Bar"
+
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* userNotAuthenticated */
+    } /* Add To Cart */
+
     
 
     
