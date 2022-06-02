@@ -88,7 +88,23 @@ heading "View Specific Product"
         #endif /* invalidInput */
     } /* Write Reviews */
 
-    
+    sequence "Compare Price" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickComparePriceButton: User -> "Specific Product Page"
+        ComparePriceData: "Specific Product Page" -> "Products Server"
+        GetPriceOfProduct: "Products Server" -> "Database"
+        ReturnComparedPrice: "Products Server" <- "Database"
+
+        #ifndef noPriceInformation
+            
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+        
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+
+        #endif /* noPriceInformation */
+    } /* Compare Price */
 
     
 }
