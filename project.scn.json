@@ -24,6 +24,10 @@
     {
       "modelPath": "model/payment.FDL",
       "scenarioName": "payment"
+    },
+    {
+      "modelPath": "model/viewspecificitem.FDL",
+      "scenarioName": "viewspecificitem"
     }
   ],
 

@@ -11,12 +11,35 @@ heading "View Specific Product"
         GetSpecificProductData: "Products Server" -> "Database"
         ReturnProductSpecifications: "Products Server" <- "Database"
         
-        #ifndef emptyProductSpecifications
+        #ifndef emptyProductSpecificationsUnregisteredUser
+
             DisplayMessage: "Specific Product Page" -> "Specific Product Page"
-        #else /* emptyProductSpecifications    */
+            
+        #else 
+
             DisplayErr: "Specific Product Page" -> "Specific Product Page"
         #endif /* emptyProductSpecifications   */
     } /* View Specifications */
+
+    sequence "View Reviews" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickReviewsButton: User -> "Specific Product Page"
+        RequestReviewsData: "Specific Product Page" -> "Products Server"
+        GetReviewData: "Products Server" -> "Database"
+        ReturnProductReview: "Products Server" <- "Database"
+
+        #ifndef emptyProductReviews
+
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+            DisplayButton: "Specific Product Page" -> "Specific Product Page"
+            
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* emptyProductReviews */
+    } /* View Reviews */
+
+    
 
     
 }
