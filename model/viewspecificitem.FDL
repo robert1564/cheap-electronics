@@ -5,7 +5,18 @@ feature "View Specific Product" {
 heading "View Specific Product"
 
     sequence "View Specifications" {
-        NavigateToProduct: 
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickSpecificationsButton: User -> "Specific Product Page"
+        RequestProductData: "Specific Product Page" -> "Products Server"
+        GetSpecificProductData: "Products Server" -> "Database"
+        ReturnProductSpecifications: "Products Server" <- "Database"
         
-    } /* title */
+        #ifndef emptyProductSpecifications
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+        #else /* emptyProductSpecifications    */
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* emptyProductSpecifications   */
+    } /* View Specifications */
+
+    
 }

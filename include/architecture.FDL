@@ -31,6 +31,8 @@ eternal : "Authentication" in "Authentication Component"
 eternal : "Registration Page" in "Web Client Component"
 eternal : "Login Page" in "Web Client Component"
 eternal : "Home Page" in "Web Client Component"
+eternal : "Specific Product Page" in "Web Client Component"
+eternal : "Products Server" in "Web Server Component"
 eternal : "Database" in "Database Component"
 eternal : "Management Server" in "Web Server Component"
 eternal : "BigBlueButton Server" in "Web Server Component"
@@ -39,6 +41,7 @@ eternal : "Payment Page" in "Web Client Component"
 eternal : "Bank" in "Bank Component"
 eternal : "Payment System" in "Web Server Component" 
 eternal : "Meeting Page" in "Web Client Component"
+
 
 
 /* Dynamic objects - Using dynamic to share a single axis between two entities
