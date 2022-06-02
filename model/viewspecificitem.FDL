@@ -56,6 +56,38 @@ heading "View Specific Product"
         #endif /* userNotAuthenticated */
     } /* Add To Cart */
 
+    sequence "Write Reviews" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickAddReviewsButton: User -> "Specific Product Page"
+        RequestReviewsData: "Specific Product Page" -> "Review Server"
+        DisplayReviewForm: "Review Page" -> "Review Server"
+        FillInData(username, firstName, lastName, reviewBox): User -> "Review Page"
+        PostReview: "Review Server" -> "Database"
+        ReturnReviewData: "Review Page" <- "Database"
+
+        #ifndef invalidInput
+            RequestReviewsData(data): "Review Page" -> "Review Server"
+            RequestValidateUserPermissions: "Review Server" -> "Authentication"
+            ValidateUserPermissions: "Authentication" -> "Authentication"
+
+            #ifndef userIsNotAuthenticated
+            
+                PermissionsValidation: "Products Server" <- "Authentication"
+                AddReviewToDb(data): "Review Server" -> "Database"
+                ReturnNewReview(review): "Review Server" <- "Database"
+                RedirectToProduct(product): "Review Server" -> "Specific Product Page"
+            
+            #else 
+        
+                ReturnUnauthorisedError: "Review Server" -> "Review Page"
+                DisplayErr: "Review Page" -> "Review Page"
+
+            #endif /* userIsNotAuthenticated */
+        #else
+            DisplayErr: "Review Page" -> "Review Page"
+        #endif /* invalidInput */
+    } /* Write Reviews */
+
     
 
     
