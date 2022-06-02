@@ -1,0 +1,11 @@
+#include "project-inc.FDL"
+
+feature "View Specific Product" {
+
+heading "View Specific Product"
+
+    sequence "View Specifications" {
+        NavigateToProduct: 
+        
+    } /* title */
+}
