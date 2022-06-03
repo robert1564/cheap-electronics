@@ -26,8 +26,12 @@
       "scenarioName": "payment"
     },
     {
-      "modelPath": "model/viewspecificitem.FDL",
-      "scenarioName": "viewspecificitem"
+      "modelPath": "model/viewSpecificItem.FDL",
+      "scenarioName": "viewSpecificItem"
+    },
+    {
+      "modelPath": "model/productManagement.FDL",
+      "scenarioName": "productManagement"
     }
   ],
 
