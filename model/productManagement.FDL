@@ -4,4 +4,22 @@ feature "Product Management" {
 
 heading "Product Management"
 
+    sequence "View Products" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        ClickViewProductsButton: Admin -> "Dashboard Page"
+        RequestViewProductsList: "Dashboard Page" -> "Products Server"
+        GetViewProducts: "Products Server" -> "Database"
+        ReturnViewProducts(products): "Products Server" <- "Database"
+        ReturnProducts: "Dashboard Page" <- "Products Server"
+
+        #ifndef emptyViewProducts
+            
+            DisplayProducts: "Dashboard Page" -> "Dashboard Page"
+
+        #else
+
+            DisplayErr: "Products Page" -> "Products Page"
+
+        #endif /* emptyViewProducts */
+    } /* View Products */
 }

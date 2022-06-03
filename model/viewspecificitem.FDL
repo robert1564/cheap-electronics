@@ -1,8 +1,8 @@
 #include "project-inc.FDL"
 
-feature "View Specific Product" {
+feature "View Specific Item" {
 
-heading "View Specific Product"
+heading "View Specific Item"
 
     sequence "View Specifications" {
         NavigateToSpecificProduct: User -> "Specific Product Page"

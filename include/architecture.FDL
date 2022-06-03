@@ -27,11 +27,13 @@ component : "Web Client Component" in "Web Client"
 
 /* Tier 1: eternal and dynamic objects*/
 eternal : "User" in "Actor Component"
+eternal : "Admin" in "Actor Component"
 eternal : "Authentication" in "Authentication Component"
 eternal : "Registration Page" in "Web Client Component"
 eternal : "Login Page" in "Web Client Component"
 eternal : "Home Page" in "Web Client Component"
 eternal : "Specific Product Page" in "Web Client Component"
+eternal : "Dashboard Page" in "Web Client Component"
 eternal : "Products Server" in "Web Server Component"
 eternal : "Cart Server" in "Web Server Component"
 eternal : "Review Server" in "Web Server Component"
