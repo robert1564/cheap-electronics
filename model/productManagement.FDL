@@ -6,11 +6,15 @@ heading "Product Management"
 
     sequence "View Products" {
         NavigateToDashboard: Admin -> "Dashboard Page"
-        ClickViewProductsButton: Admin -> "Dashboard Page"
-        RequestViewProductsList: "Dashboard Page" -> "Products Server"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickViewProductsButton(button): Admin -> "Dashboard Page"
+        ClickViewProductsButton(button): Editor -> "Dashboard Page"
+        NavigateToProductsList: Admin -> "Dashboard Page" -> "View Products Page"
+        NavigateToProductsList: Editor -> "Dashboard Page" -> "View Products Page"
+        RequestViewProductsList: "View Products Page" -> "Products Server"
         GetViewProducts: "Products Server" -> "Database"
         ReturnViewProducts(products): "Products Server" <- "Database"
-        ReturnProducts: "Dashboard Page" <- "Products Server"
+        ReturnProducts: "View Products Page" <- "Products Server"
 
         #ifndef emptyViewProducts
             
@@ -22,4 +26,46 @@ heading "Product Management"
 
         #endif /* emptyViewProducts */
     } /* View Products */
+
+    sequence "Manage Reviews" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickManageReviewsButton(button): Admin -> "Dashboard Page"
+        ClickManageReviewsButton(button): Editor -> "Dashboard Page"
+        NavigateToReviewsList: Admin -> "Dashboard Page" -> "Manage Reviews Page"
+        NavigateToReviewsList: Editor -> "Dashboard Page" -> "Manage Reviews Page"
+        RequestReviewsList: "Manage Reviews Page" -> "Review Server"
+        GetReviewsList: "Review Server" -> "Database"
+        ReturnReviewsList(reviews): "Review Server" <- "Database"
+        ReturnReviewsList: "Manage Reviews Page" <- "Review Server"
+
+        #ifndef reviewsNotVerified
+            
+            RequestReviewStatus(data): "Manage Reviews Page" -> "Review Server"
+            GetReviewStatus: "Manage Reviews Page" <- "Review Server"
+            ClickApproveRejectButton(button): Admin -> "Manage Reviews Page"
+            ClickApproveRejectButton(button): Editor -> "Manage Reviews Page"
+            DisplayMessage: "Manage Reviews Page" -> "Manage Reviews Page"
+
+            #ifndef userHasPermission
+
+                PermissionsValid: "Review Server" <- "Authentication"
+                ManageReviews(data): "Review Server" -> "Database"
+                ReturnNewReview(review): "Review Server" <- "Database"
+                RedirectToReviewList: "Review Server" -> "Manage Reviews Page"
+
+            #else 
+
+                ReturnUnauthorisedError: "Review Server" -> "Manage Reviews Page"
+                DisplayErr: "Manage Reviews Page" -> "Manage Reviews Page"
+
+            #endif /* userHasPermission */
+
+        #else 
+
+            DisplayErr: "Manage Reviews Page" -> "Manage Reviews Page"
+
+        #endif /* reviewsNotVerified */
+
+    }
 }
