@@ -106,5 +106,28 @@ heading "View Specific Product"
         #endif /* noPriceInformation */
     } /* Compare Price */
 
+    sequence "Share on Social Media" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        RequestProductData: "Specific Product Page" -> "Products Server"
+        GetSpecificProductData: "Products Server" -> "Database"
+        ReturnProductSpecifications: "Products Server" <- "Database"
+
+        #ifndef SocialMediaLinks
+        
+            ClickSocialMediaButton: "Specific Product Page" -> "Redirect to Social-Media"
+            AcquireBonusPoints: "Specific Product Page" -> "Bonus Points Page"
+            RequestUserData: "Bonus Points Page" -> "User Server"
+            GetUserData: "User Server" -> "Database"
+            ReturnBonusPoints: "User Server" <- "Database"
+
+        #else
+
+            ReturnNotFoundError: "Products Server" -> "Specific Product Page"
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+            
+
+        #endif /* emptySocialMediaButton */
+
+    } /* Share on Social Media */
     
 }
