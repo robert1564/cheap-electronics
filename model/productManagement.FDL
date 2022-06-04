@@ -36,8 +36,7 @@ heading "Product Management"
         NavigateToReviewsList: Editor -> "Dashboard Page" -> "Manage Reviews Page"
         RequestReviewsList: "Manage Reviews Page" -> "Review Server"
         GetReviewsList: "Review Server" -> "Database"
-        ReturnReviewsList(reviews): "Review Server" <- "Database"
-        ReturnReviewsList: "Manage Reviews Page" <- "Review Server"
+        ReturnReviewsList(username, reviewBox): "Review Server" <- "Database"
 
         #ifndef reviewsNotVerified
             
@@ -47,7 +46,7 @@ heading "Product Management"
             ClickApproveRejectButton(button): Editor -> "Manage Reviews Page"
             DisplayMessage: "Manage Reviews Page" -> "Manage Reviews Page"
 
-            #ifndef userHasPermission
+            #ifndef userHasNoPermission
 
                 PermissionsValid: "Review Server" <- "Authentication"
                 ManageReviews(data): "Review Server" -> "Database"
@@ -66,6 +65,29 @@ heading "Product Management"
             DisplayErr: "Manage Reviews Page" -> "Manage Reviews Page"
 
         #endif /* reviewsNotVerified */
+    } /* Manage Reviews */
 
-    }
+    sequence "Manage Shipment" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickManageShipmentsButton(button): Admin -> "Dashboard Page"
+        ClickManageShipmentsButton(button): Editor -> "Dashboard Page"
+        NavigateToShipmentsList: Admin -> "Dashboard Page" -> "Manage Shipments Page"
+        NavigateToShipmentsList: Editor -> "Dashboard Page" -> "Manage Shipments Page"
+        RequestShipmentsList: "Manage Shipments Page" -> "Shipments Server"
+        GetShipmentsList: "Shipments Server" -> "Database"
+        ReturnShipmentsList(startLocation, leftHubTime, pickedUpDelivery, lastStatus): "Shipments Server" <- "Database"
+
+        #ifndef emptyShipmentList
+            
+            SendShipmentsBack(shipments): "Shipments Server" -> "Manage Shipments Page"
+            RenderShipments(shipments): "Manage Shipments Page" -> "Manage Shipments Page"
+
+        #else
+
+            SendShipmentsBack(empty array): "Manage Shipments Page" -> "Manage Shipments Page"
+            DisplayErr: "Manage Shipments Page" -> "Manage Shipments Page"
+
+        #endif /* emptyShipmentList */
+    } /* Manage Shipment */
 }
