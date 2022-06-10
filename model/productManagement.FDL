@@ -4,6 +4,7 @@ feature "Product Management" {
 
 heading "Product Management"
 
+<<<<<<< HEAD
     sequence "View Products" {
         NavigateToDashboard: Admin -> "Dashboard Page"
         NavigateToDashboard: Editor -> "Dashboard Page"
@@ -90,4 +91,83 @@ heading "Product Management"
 
         #endif /* emptyShipmentList */
     } /* Manage Shipment */
+=======
+  sequence "Add Product" {
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickAddProductButton: Admin -> "Dashboard Page"
+    NavigateToAddProductPage: "Dashboard Page" -> "Add Product Page"
+    FillInData(name,description,category, price, quantity,brand): Admin -> "Add Product Page"
+    
+    #ifndef invalidInput
+      RequestAddNewProduct(data): "Add Product Page" -> "Products Server"
+      RequestValidateUserPermissions: "Products Server" -> "Authentication"
+      ValidateUserPermissions: "Authentication" -> "Authentication"
+   
+
+      #ifndef userHasNoPermission
+        PermissionsValid: "Products Server" <- "Authentication"
+        AddProductToDb(data): "Products Server" -> "Database"
+        ReturnNewProduct(product): "Products Server" <- "Database"
+        RedirectToDashboard: "Products Server" -> "Dashboard Page"
+
+      #else 
+        ReturnUnauthorisedError: "Products Server" -> "Add Product Page"
+        DisplayErr: "Add Products Page" -> "Add Products Page"
+      #endif /* userHasNoPermission */
+    #else
+      DisplayErr: "Add Product Page" -> "Add Product Page" 
+    #endif /* invalidInput */
+  }
+
+  sequence "Edit Product" {
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickEditProductButton: Admin -> "Dashboard Page"
+    NavigateToEditProductPage: "Dashboard Page" -> "Edit Product Page"
+    EditData(name,description,category, price, quantity,brand): Admin -> "Edit Product Page"
+  
+    #ifndef invalidInput
+      SubmitEditProduct(data): "Edit Product Page" -> "Products Server"
+      RequestValidateUserPermissions: "Products Server" -> "Authentication"
+      ValidateUserPermissions: "Authentication" -> "Authentication"
+   
+
+      #ifndef userHasNoPermission
+        PermissionsValid: "Products Server" <- "Authentication"
+        EditProductDb(data): "Products Server" -> "Database"
+        ReturnEditedProduct(product): "Products Server" <- "Database"
+        RedirectToDashboard: "Products Server" -> "Dashboard Page"
+
+      #else 
+        ReturnUnauthorisedError: "Products Server" -> "Edit Product Page"
+        DisplayErr: "Edit Products Page" -> "Edit Products Page"
+      #endif /* userHasNoPermission */
+    #else
+      DisplayErr: "Edit Product Page" -> "Edit Product Page" 
+    #endif /* invalidInput */
+  }
+
+  sequence "Delete Product"{ 
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickViewProductsButton: Admin -> "Dashboard Page"
+    NavigateToEditProductPage: "Dashboard Page" -> "View Products Page"
+    ClickDeleteButton: "Admin" -> "View Products Page"
+    RequestDeleteProduct(productId): "View Products Page" -> "Products Server"
+
+    RequestValidateUserPermissions: "Products Server" -> "Authentication"
+    ValidateUserPermissions: "Authentication" -> "Authentication"
+
+    #ifndef userHasNoPermission
+      PermissionsValid: "Products Server" <- "Authentication"
+      DeleteProductDb(productId): "Products Server" -> "Database"
+      ReturnOK: "Products Server" <- "Database"
+      ReturnOK: "Products Server" -> "View Products Page"
+      RemoveProductFromPage: "View Products Page" -> "View Products Page"
+    #else 
+      ReturnUnauthorisedError: "Products Server" -> "View Product Page"
+      DisplayErr: "View Products Page" -> "View Products Page"
+    #endif /* userHasNoPermission */
+
+  }
+
+>>>>>>> theo
 }

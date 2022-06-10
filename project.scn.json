@@ -11,7 +11,16 @@
   "scenarios": [
     {
       "modelPath": "model/authentication.FDL",
-      "scenarioName": "Authentication"
+      "scenarioName": "Authentication",
+      "defines": ["VALIDINPUT"]
+    },
+    {
+      "modelPath": "model/viewItems.FDL",
+      "scenarioName": "View Items"
+    },
+    {
+      "modelPath": "model/productManagement.FDL",
+      "scenarioName": "Product Management"
     },
     {
       "modelPath": "model/meetings.FDL",
@@ -66,20 +75,13 @@
     {
       "documentName": "tier2",
       "interactionLevel": "component",
-      "defines": [
-        "POSTER",
-        "USE_MULTI_TIER_HEADER"
-      ]
+      "defines": ["POSTER", "USE_MULTI_TIER_HEADER"]
     },
     {
       "documentName": "tier3",
       "interactionLevel": "module",
-      "defines": [
-        "USE_MULTI_TIER_HEADER"
-      ],
-      "exclude": [
-        "remarks"
-      ]
+      "defines": ["USE_MULTI_TIER_HEADER"],
+      "exclude": ["remarks"]
     },
     {
       "documentName": "tier4",
@@ -88,10 +90,7 @@
     {
       "documentName": "tier5",
       "interactionLevel": "system",
-      "defines": [
-        "PRESENTATION",
-        "USE_CALLOUT_REMARKS"
-      ]
+      "defines": ["PRESENTATION", "USE_CALLOUT_REMARKS"]
     },
     {
       "documentType": "context-diagram",

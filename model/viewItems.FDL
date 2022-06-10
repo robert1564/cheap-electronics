@@ -1,0 +1,128 @@
+#include "project-inc.FDL"
+
+feature "View Items" {
+
+heading "View Items"
+
+  sequence "Search Items" {
+    EnterSearchTerm(term): "User" -> "Products Page"
+    PressOK: User -> "Products Page"
+    RequestProducts(term): "Products Page" -> "Products Server"
+    GetProductsMatchingTerm(term): "Products Server" -> "Database"
+    ReturnProducts(products): "Products Server" <- "Database"
+
+    #ifndef emptyProductsResult
+    SendProductsBack(products): "Products Server" -> "Products Page"
+    RenderProducts(products): "Products Page" -> "Products Page"
+    
+    #else 
+    SendProductsBack(empty array): "Products Server" -> "Products Page"
+    DisplayErr: "Products Page" -> "Products Page"
+
+    #endif /* emptyProductsResult */
+  }
+
+  sequence "Browse Items" {
+    NavigateToProductsPage: "User" -> "Products Page"
+    RequestAllProductsList: "Products Page" -> "Products Server"
+    GetAllProducts: "Products Server" -> "Database"
+    ReturnAllProducts(products): "Products Server" <- "Database"
+    ReturnProductsList: "Products Page" <- "Products Server"
+    
+    #ifndef emptyProductArray
+      DisplayProducts: "Products Page" -> "Products Page"
+
+    #else
+      DisplayErr: "Products Page" -> "Products Page"
+
+    #endif /* emptyProductArray */
+  }
+
+  sequence "View Recommended Products" {
+    NavigateToProductsPage: "Registered Customer" -> "Products Page"
+    RequestRecommendedProducts: "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid(ok): "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+    GetRecommendedProductsSnapshot(user): "Products Server" -> "Database"
+    ReturnRecommendedProducts(products): "Products Server" <- "Database"
+    SendRecommendedProductsSnapshot(products): "Products Server" -> "Products Page"
+    
+      #ifndef noRecommended
+        DisplayRecommendedProductsCarousel: "Products Page" -> "Products Page"
+
+        ClickViewMore: "Registered Customer" -> "Products Page"
+        RedirectToRecommendedProducts: "Products Page" -> "Recommended Products Page"
+        GetAllRecommendedProductsRequest: "Recommended Products Page" -> "Products Server"
+        ValidateUserIsRegistered: "Products Server" -> "Authentication"
+        ValidateJWT: "Authentication" -> "Authentication"
+        UserValid(ok): "Authentication" -> "Products Server"
+
+        #ifndef userInvalid
+          GetAllRecommendedProducts: "Products Server" -> "Database"
+          ReturnAllRecommendedProducts(products): "Products Server" <- "Database"
+          SendAllRecommendedProducts(products): "Products Server" -> "Recommended Products Page"
+
+          #ifndef noProducts
+            DisplayRecommendedProducts: "Recommended Products Page" -> "Recommended Products Page"
+          #else 
+          #endif /* noProducts */
+
+        #else
+          ReturnUnauthorizedError: "Recommended Products Page" <- "Products Server"
+          DisplayErr: "Products Page" <- "Products Page"
+        #endif /* userValid */
+
+       
+
+      #endif /* noRecommended */
+
+    #else 
+    ReturnUnauthorizedError: "Products Page" <- "Products Server"
+    DisplayErr: "Products Page" <- "Products Page"
+
+
+
+    #endif /* userValid */
+  }
+
+  sequence "Add to shopping cart" {
+    ClickShoppingCartButtonOnProduct: "Registered Customer" -> "Products Page"
+    RequestAddProductToShoppingCard(product): "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid: "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+      AddProductToShoppingCart(product): "Products Server" -> "Database"
+      ReturnUserCart(items): "Products Server" <- "Database"
+      ReturnShoppingCartItems(items): "Products Server" -> "Products Page"
+      UpdateItemNumberIcon: "Products Page" -> "Products Page"
+
+    #else 
+      ReturnNotAuthorizedError: "Products Server" -> "Products Page"
+      DisplayErr: "Products Page" -> "Products Page"
+    #endif /* userInvalid */
+  }
+
+  sequence "Add to Wishlist" {
+    ClickHeartButtonOnProduct: "Registered Customer" -> "Products Page"
+    RequestAddProductToWishlist(product): "Products Page" -> "Products Server"
+    ValidateUserIsRegistered: "Products Server" -> "Authentication"
+    ValidateJWT: "Authentication" -> "Authentication"
+    UserValid: "Authentication" -> "Products Server"
+
+    #ifndef userInvalid
+      AddProductToWishlist(product): "Products Server" -> "Database"
+      ReturnUserWishlist(items): "Products Server" <- "Database"
+      ReturnWishlistItems(items): "Products Server" -> "Products Page"
+      UpdateWishlistItemNumberIcon: "Products Page" -> "Products Page"
+
+    #else 
+      ReturnNotAuthorizedError: "Products Server" -> "Products Page"
+      DisplayErr: "Products Page" -> "Products Page"
+    #endif /* userInvalid */
+  }
+}

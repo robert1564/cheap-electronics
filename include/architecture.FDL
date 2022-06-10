@@ -3,12 +3,12 @@ as demonstrated in this example. If your are modeling a less complex system,
 you may choose a 4, 3, 2 or 1 tier architecture. */
 
 /* Tier 5: System declaration */
-system: "Virtual Space Meeting"
+system: "Cheap Electronics WebStore"
 
 /* Tier 4: Subsystem declaration */
-subsystem: Server in "Virtual Space Meeting"
-subsystem: Actor in "Virtual Space Meeting"
-subsystem: Client in "Virtual Space Meeting"
+subsystem: Server in "Cheap Electronics WebStore"
+subsystem: Actor in "Cheap Electronics WebStore"
+subsystem: Client in "Cheap Electronics WebStore"
 
 /* Tier 3: Module declaration  */
 module : "Database Module" in Server
@@ -27,12 +27,19 @@ component : "Web Client Component" in "Web Client"
 
 /* Tier 1: eternal and dynamic objects*/
 eternal : "User" in "Actor Component"
+<<<<<<< HEAD
 eternal : "Admin" in "Actor Component"
 eternal : "Editor" in "Actor Component"
+=======
+eternal : "Unregistered Customer" in "Actor Component"
+eternal : "Registered Customer" in "Actor Component"
+eternal : "Admin" in "Actor Component"
+>>>>>>> theo
 eternal : "Authentication" in "Authentication Component"
 eternal : "Registration Page" in "Web Client Component"
 eternal : "Login Page" in "Web Client Component"
 eternal : "Home Page" in "Web Client Component"
+<<<<<<< HEAD
 eternal : "Specific Product Page" in "Web Client Component"
 eternal : "View Products Page" in "Web Client Component"
 eternal : "Manage Reviews Page" in "Web Client Component"
@@ -47,11 +54,24 @@ eternal : "Navigation Bar" in "Web Client Component"
 eternal : "Review Page" in "Web Client Component"
 eternal : "Redirect to Social-Media" in "Web Client Component"
 eternal : "Bonus Points Page" in "Web Client Component"
+=======
+eternal : "Products Page" in "Web Client Component"
+eternal : "Recommended Products Page" in "Web Client Component"
+eternal : "Dashboard Page" in "Web Client Component"
+eternal : "Add Product Page" in "Web Client Component"
+eternal : "Edit Product Page" in "Web Client Component"
+eternal : "View Products Page" in "Web Client Component"
+eternal : "Products Server" in "Web Server Component"
+>>>>>>> theo
 eternal : "Database" in "Database Component"
 eternal : "Management Server" in "Web Server Component"
 eternal : "BigBlueButton Server" in "Web Server Component"
 eternal : "Chat Interface" in "Web Client Component"
-eternal : "Payment Page" in "Web Client Component"
+eternal : "Payment Page" in "Web Client Component" // site
+eternal : "App Server" in "Web Client Component"  // web server
+eternal : "Paypal" in "Web Client Component" // paypal
+eternal : "Specific Product Page" in "Web Client Component"
+eternal : "My Cart Page" in "Web Client Component"
 eternal : "Bank" in "Bank Component"
 eternal : "Payment System" in "Web Server Component" 
 eternal : "Meeting Page" in "Web Client Component"
