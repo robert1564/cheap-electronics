@@ -76,11 +76,6 @@
       "interactionLevel": "subsystem"
     },
     {
-      "documentName": "tier5",
-      "interactionLevel": "system",
-      "defines": ["PRESENTATION", "USE_CALLOUT_REMARKS"]
-    },
-    {
       "documentType": "context-diagram",
       "documentName": "context"
     }
