@@ -23,24 +23,12 @@
       "scenarioName": "Product Management"
     },
     {
-      "modelPath": "model/meetings.FDL",
-      "scenarioName": "Meetings"
-    },
-    {
-      "modelPath": "model/chat.FDL",
-      "scenarioName": "Chat"
-    },
-    {
       "modelPath": "model/payment.FDL",
       "scenarioName": "payment"
     },
     {
       "modelPath": "model/viewSpecificItem.FDL",
       "scenarioName": "viewSpecificItem"
-    },
-    {
-      "modelPath": "model/productManagement.FDL",
-      "scenarioName": "productManagement"
     }
   ],
 

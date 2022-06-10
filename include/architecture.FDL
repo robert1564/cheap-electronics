@@ -15,11 +15,9 @@ module : "Database Module" in Server
 module : "Actor Module" in Actor
 module : "Web Server" in Server
 module : "Web Client" in Client
-module : "Bank Module" in Server
 
 /* Tier 2: Components are contained within modules  */
 component : "Database Component" in "Database Module" 
-component : "Bank Component" in "Bank Module"
 component : "Actor Component" in "Actor Module"
 component : "Authentication Component" in "Web Server"
 component : "Web Server Component" in "Web Server"
@@ -27,25 +25,17 @@ component : "Web Client Component" in "Web Client"
 
 /* Tier 1: eternal and dynamic objects*/
 eternal : "User" in "Actor Component"
-<<<<<<< HEAD
 eternal : "Admin" in "Actor Component"
 eternal : "Editor" in "Actor Component"
-=======
 eternal : "Unregistered Customer" in "Actor Component"
 eternal : "Registered Customer" in "Actor Component"
-eternal : "Admin" in "Actor Component"
->>>>>>> theo
 eternal : "Authentication" in "Authentication Component"
 eternal : "Registration Page" in "Web Client Component"
 eternal : "Login Page" in "Web Client Component"
 eternal : "Home Page" in "Web Client Component"
-<<<<<<< HEAD
-eternal : "Specific Product Page" in "Web Client Component"
-eternal : "View Products Page" in "Web Client Component"
 eternal : "Manage Reviews Page" in "Web Client Component"
 eternal : "Manage Shipments Page" in "Web Client Component"
 eternal : "Dashboard Page" in "Web Client Component"
-eternal : "Products Server" in "Web Server Component"
 eternal : "Cart Server" in "Web Server Component"
 eternal : "Review Server" in "Web Server Component"
 eternal : "Shipments Server" in "Web Server Component"
@@ -54,31 +44,16 @@ eternal : "Navigation Bar" in "Web Client Component"
 eternal : "Review Page" in "Web Client Component"
 eternal : "Redirect to Social-Media" in "Web Client Component"
 eternal : "Bonus Points Page" in "Web Client Component"
-=======
 eternal : "Products Page" in "Web Client Component"
 eternal : "Recommended Products Page" in "Web Client Component"
-eternal : "Dashboard Page" in "Web Client Component"
 eternal : "Add Product Page" in "Web Client Component"
 eternal : "Edit Product Page" in "Web Client Component"
 eternal : "View Products Page" in "Web Client Component"
 eternal : "Products Server" in "Web Server Component"
->>>>>>> theo
 eternal : "Database" in "Database Component"
 eternal : "Management Server" in "Web Server Component"
-eternal : "BigBlueButton Server" in "Web Server Component"
-eternal : "Chat Interface" in "Web Client Component"
-eternal : "Payment Page" in "Web Client Component" // site
-eternal : "App Server" in "Web Client Component"  // web server
-eternal : "Paypal" in "Web Client Component" // paypal
+eternal : "Payment Page" in "Web Client Component" 
+eternal : "App Server" in "Web Server Component"  
+eternal : "Paypal" in "Web Client Component"
 eternal : "Specific Product Page" in "Web Client Component"
 eternal : "My Cart Page" in "Web Client Component"
-eternal : "Bank" in "Bank Component"
-eternal : "Payment System" in "Web Server Component" 
-eternal : "Meeting Page" in "Web Client Component"
-
-
-
-/* Dynamic objects - Using dynamic to share a single axis between two entities
-                     You may use dynamic to model objects that are created
-                     and destroyed during the execution of a feature */
-dynamic : Session in "Database Component"

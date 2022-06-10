@@ -4,7 +4,6 @@ feature "Product Management" {
 
 heading "Product Management"
 
-<<<<<<< HEAD
     sequence "View Products" {
         NavigateToDashboard: Admin -> "Dashboard Page"
         NavigateToDashboard: Editor -> "Dashboard Page"
@@ -91,7 +90,6 @@ heading "Product Management"
 
         #endif /* emptyShipmentList */
     } /* Manage Shipment */
-=======
   sequence "Add Product" {
     NavigateToDashboard: Admin -> "Dashboard Page"
     ClickAddProductButton: Admin -> "Dashboard Page"
@@ -169,5 +167,4 @@ heading "Product Management"
 
   }
 
->>>>>>> theo
 }
