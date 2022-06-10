@@ -5,34 +5,37 @@ feature "Authentication" {
 heading "Authentication"
 
    sequence "Login" {
-
+      NavigateToLoginPage: "Unregistered Customer" -> "Login Page"
       EnterUserCredidentials (username, password): User -> "Login Page"
-      SendUserInfo: "Login Page" -> Authentication
+      SendUserInfo: "Login Page" -> "App Server"
+      SendInfo: "App Server" -> Authentication
       ValidateUserCredentials: Authentication -> Database
+      CredentialsOk: Database -> Authentication
 
-      #ifdef UserCredentialsError
+      #ifndef UserCredentialsError
+         OK: Authentication -> "App Server"
+         RedirectUserToTheHomePage: "App Server" -> "Products Page"
+      #else 
          InvalidUserCredentials: "Login Page" <- Authentication
          InformUnacceptedUser: User <- "Login Page"
-      #else 
-         UserLoginAcc: "Login Page" <- Authentication
-         RedirectUserToTheHomePage: "Login Page" -> "Home Page"
-      #endif /* UserCredentialsError
-       */
+      #endif /* UserCredentialsError*/
    }
 
-   sequence "Register" {
-      UserRegistartion: User -> "Registration Page"
-      VerifyInput: "Registration Page" -> Database
-      VerificationResult: "Registration Page" <- Database 
-
-      #ifdef ValidInput
-         AddNewUser: "Registration Page" -> Database
-         Redirection: "Registration Page" -> "Home Page"
-         
-      #else /* ValidInput
-       */
-         DisplayErr: User <- "Registration Page"
-      #endif /* ValidInput
-       */
+   sequence "Client Registration" {
+      GoToRegistrationPage: "Unregistered Customer" -> "Registration Page"
+      FillInUsername(username): "Unregistered Customer" -> "Registration Page"
+      FillInPassword(password): "Unregistered Customer" -> "Registration Page"
+      FillInConfirmPassword(confirmPassword): "Unregistered Customer" -> "Registration Page"
+      SubmitForm: "Unregistered Customer" -> "Registration Page"
+      ValidateInput: "Registration Page" -> "Authentication"
+      
+      #ifdef VALIDINPUT
+         CreateUser: "Authentication" -> "Database"
+         ReturnNewUser: "Authentication" <- "Database"
+         SetCookie(JWT): "Authentication" -> "Authentication"
+         Redirect: "Authentication" -> "Products Page"
+      #else 
+         DisplayErr: "Authentication" -> "Registration Page"
+      #endif /* VALIDINPUT */
    }
 }

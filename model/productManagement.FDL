@@ -1,0 +1,173 @@
+#include "project-inc.FDL"
+
+feature "Product Management" {
+
+heading "Product Management"
+
+<<<<<<< HEAD
+    sequence "View Products" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickViewProductsButton(button): Admin -> "Dashboard Page"
+        ClickViewProductsButton(button): Editor -> "Dashboard Page"
+        NavigateToProductsList: Admin -> "Dashboard Page" -> "View Products Page"
+        NavigateToProductsList: Editor -> "Dashboard Page" -> "View Products Page"
+        RequestViewProductsList: "View Products Page" -> "Products Server"
+        GetViewProducts: "Products Server" -> "Database"
+        ReturnViewProducts(products): "Products Server" <- "Database"
+        ReturnProducts: "View Products Page" <- "Products Server"
+
+        #ifndef emptyViewProducts
+            
+            DisplayProducts: "Dashboard Page" -> "Dashboard Page"
+
+        #else
+
+            DisplayErr: "Products Page" -> "Products Page"
+
+        #endif /* emptyViewProducts */
+    } /* View Products */
+
+    sequence "Manage Reviews" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickManageReviewsButton(button): Admin -> "Dashboard Page"
+        ClickManageReviewsButton(button): Editor -> "Dashboard Page"
+        NavigateToReviewsList: Admin -> "Dashboard Page" -> "Manage Reviews Page"
+        NavigateToReviewsList: Editor -> "Dashboard Page" -> "Manage Reviews Page"
+        RequestReviewsList: "Manage Reviews Page" -> "Review Server"
+        GetReviewsList: "Review Server" -> "Database"
+        ReturnReviewsList(username, reviewBox): "Review Server" <- "Database"
+
+        #ifndef reviewsNotVerified
+            
+            RequestReviewStatus(data): "Manage Reviews Page" -> "Review Server"
+            GetReviewStatus: "Manage Reviews Page" <- "Review Server"
+            ClickApproveRejectButton(button): Admin -> "Manage Reviews Page"
+            ClickApproveRejectButton(button): Editor -> "Manage Reviews Page"
+            DisplayMessage: "Manage Reviews Page" -> "Manage Reviews Page"
+
+            #ifndef userHasNoPermission
+
+                PermissionsValid: "Review Server" <- "Authentication"
+                ManageReviews(data): "Review Server" -> "Database"
+                ReturnNewReview(review): "Review Server" <- "Database"
+                RedirectToReviewList: "Review Server" -> "Manage Reviews Page"
+
+            #else 
+
+                ReturnUnauthorisedError: "Review Server" -> "Manage Reviews Page"
+                DisplayErr: "Manage Reviews Page" -> "Manage Reviews Page"
+
+            #endif /* userHasPermission */
+
+        #else 
+
+            DisplayErr: "Manage Reviews Page" -> "Manage Reviews Page"
+
+        #endif /* reviewsNotVerified */
+    } /* Manage Reviews */
+
+    sequence "Manage Shipment" {
+        NavigateToDashboard: Admin -> "Dashboard Page"
+        NavigateToDashboard: Editor -> "Dashboard Page"
+        ClickManageShipmentsButton(button): Admin -> "Dashboard Page"
+        ClickManageShipmentsButton(button): Editor -> "Dashboard Page"
+        NavigateToShipmentsList: Admin -> "Dashboard Page" -> "Manage Shipments Page"
+        NavigateToShipmentsList: Editor -> "Dashboard Page" -> "Manage Shipments Page"
+        RequestShipmentsList: "Manage Shipments Page" -> "Shipments Server"
+        GetShipmentsList: "Shipments Server" -> "Database"
+        ReturnShipmentsList(startLocation, leftHubTime, pickedUpDelivery, lastStatus): "Shipments Server" <- "Database"
+
+        #ifndef emptyShipmentList
+            
+            SendShipmentsBack(shipments): "Shipments Server" -> "Manage Shipments Page"
+            RenderShipments(shipments): "Manage Shipments Page" -> "Manage Shipments Page"
+
+        #else
+
+            SendShipmentsBack(empty array): "Manage Shipments Page" -> "Manage Shipments Page"
+            DisplayErr: "Manage Shipments Page" -> "Manage Shipments Page"
+
+        #endif /* emptyShipmentList */
+    } /* Manage Shipment */
+=======
+  sequence "Add Product" {
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickAddProductButton: Admin -> "Dashboard Page"
+    NavigateToAddProductPage: "Dashboard Page" -> "Add Product Page"
+    FillInData(name,description,category, price, quantity,brand): Admin -> "Add Product Page"
+    
+    #ifndef invalidInput
+      RequestAddNewProduct(data): "Add Product Page" -> "Products Server"
+      RequestValidateUserPermissions: "Products Server" -> "Authentication"
+      ValidateUserPermissions: "Authentication" -> "Authentication"
+   
+
+      #ifndef userHasNoPermission
+        PermissionsValid: "Products Server" <- "Authentication"
+        AddProductToDb(data): "Products Server" -> "Database"
+        ReturnNewProduct(product): "Products Server" <- "Database"
+        RedirectToDashboard: "Products Server" -> "Dashboard Page"
+
+      #else 
+        ReturnUnauthorisedError: "Products Server" -> "Add Product Page"
+        DisplayErr: "Add Products Page" -> "Add Products Page"
+      #endif /* userHasNoPermission */
+    #else
+      DisplayErr: "Add Product Page" -> "Add Product Page" 
+    #endif /* invalidInput */
+  }
+
+  sequence "Edit Product" {
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickEditProductButton: Admin -> "Dashboard Page"
+    NavigateToEditProductPage: "Dashboard Page" -> "Edit Product Page"
+    EditData(name,description,category, price, quantity,brand): Admin -> "Edit Product Page"
+  
+    #ifndef invalidInput
+      SubmitEditProduct(data): "Edit Product Page" -> "Products Server"
+      RequestValidateUserPermissions: "Products Server" -> "Authentication"
+      ValidateUserPermissions: "Authentication" -> "Authentication"
+   
+
+      #ifndef userHasNoPermission
+        PermissionsValid: "Products Server" <- "Authentication"
+        EditProductDb(data): "Products Server" -> "Database"
+        ReturnEditedProduct(product): "Products Server" <- "Database"
+        RedirectToDashboard: "Products Server" -> "Dashboard Page"
+
+      #else 
+        ReturnUnauthorisedError: "Products Server" -> "Edit Product Page"
+        DisplayErr: "Edit Products Page" -> "Edit Products Page"
+      #endif /* userHasNoPermission */
+    #else
+      DisplayErr: "Edit Product Page" -> "Edit Product Page" 
+    #endif /* invalidInput */
+  }
+
+  sequence "Delete Product"{ 
+    NavigateToDashboard: Admin -> "Dashboard Page"
+    ClickViewProductsButton: Admin -> "Dashboard Page"
+    NavigateToEditProductPage: "Dashboard Page" -> "View Products Page"
+    ClickDeleteButton: "Admin" -> "View Products Page"
+    RequestDeleteProduct(productId): "View Products Page" -> "Products Server"
+
+    RequestValidateUserPermissions: "Products Server" -> "Authentication"
+    ValidateUserPermissions: "Authentication" -> "Authentication"
+
+    #ifndef userHasNoPermission
+      PermissionsValid: "Products Server" <- "Authentication"
+      DeleteProductDb(productId): "Products Server" -> "Database"
+      ReturnOK: "Products Server" <- "Database"
+      ReturnOK: "Products Server" -> "View Products Page"
+      RemoveProductFromPage: "View Products Page" -> "View Products Page"
+    #else 
+      ReturnUnauthorisedError: "Products Server" -> "View Product Page"
+      DisplayErr: "View Products Page" -> "View Products Page"
+    #endif /* userHasNoPermission */
+
+  }
+
+>>>>>>> theo
+}

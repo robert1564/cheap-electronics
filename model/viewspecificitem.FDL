@@ -1,0 +1,133 @@
+#include "project-inc.FDL"
+
+feature "View Specific Item" {
+
+heading "View Specific Item"
+
+    sequence "View Specifications" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickSpecificationsButton: User -> "Specific Product Page"
+        RequestProductData: "Specific Product Page" -> "Products Server"
+        GetSpecificProductData: "Products Server" -> "Database"
+        ReturnProductSpecifications: "Products Server" <- "Database"
+        
+        #ifndef emptyProductSpecificationsUnregisteredUser
+
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+            
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* emptyProductSpecifications   */
+    } /* View Specifications */
+
+    sequence "View Reviews" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickReviewsButton: User -> "Specific Product Page"
+        RequestReviewsData: "Specific Product Page" -> "Products Server"
+        GetReviewData: "Products Server" -> "Database"
+        ReturnProductReview: "Products Server" <- "Database"
+
+        #ifndef emptyProductReviews
+
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+            DisplayButton: "Specific Product Page" -> "Specific Product Page"
+            
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* emptyProductReviews */
+    } /* View Reviews */
+
+    sequence "Add To Cart" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickAddToCartButton: User -> "Specific Product Page"
+        RequestCartCreation: "Specific Product Page" -> "Cart Server"
+        PostCartData: "Cart Server" -> "Database"
+        ReturnCartData: "Cart Server" <- "Database"
+
+        #ifndef userNotAuthenticated
+            
+            DisplayMessage: "Navigation Bar" -> "Navigation Bar"
+
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+        #endif /* userNotAuthenticated */
+    } /* Add To Cart */
+
+    sequence "Write Reviews" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickAddReviewsButton: User -> "Specific Product Page"
+        RequestReviewsData: "Specific Product Page" -> "Review Server"
+        DisplayReviewForm: "Review Page" -> "Review Server"
+        FillInData(username, firstName, lastName, reviewBox): User -> "Review Page"
+        PostReview: "Review Server" -> "Database"
+        ReturnReviewData: "Review Page" <- "Database"
+
+        #ifndef invalidInput
+            RequestReviewsData(data): "Review Page" -> "Review Server"
+            RequestValidateUserPermissions: "Review Server" -> "Authentication"
+            ValidateUserPermissions: "Authentication" -> "Authentication"
+
+            #ifndef userIsNotAuthenticated
+            
+                PermissionsValidation: "Products Server" <- "Authentication"
+                AddReviewToDb(data): "Review Server" -> "Database"
+                ReturnNewReview(review): "Review Server" <- "Database"
+                RedirectToProduct(product): "Review Server" -> "Specific Product Page"
+            
+            #else 
+        
+                ReturnUnauthorisedError: "Review Server" -> "Review Page"
+                DisplayErr: "Review Page" -> "Review Page"
+
+            #endif /* userIsNotAuthenticated */
+        #else
+            DisplayErr: "Review Page" -> "Review Page"
+        #endif /* invalidInput */
+    } /* Write Reviews */
+
+    sequence "Compare Price" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        ClickComparePriceButton: User -> "Specific Product Page"
+        ComparePriceData: "Specific Product Page" -> "Products Server"
+        GetPriceOfProduct: "Products Server" -> "Database"
+        ReturnComparedPrice: "Products Server" <- "Database"
+
+        #ifndef noPriceInformation
+            
+            DisplayMessage: "Specific Product Page" -> "Specific Product Page"
+        
+        #else 
+
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+
+        #endif /* noPriceInformation */
+    } /* Compare Price */
+
+    sequence "Share on Social Media" {
+        NavigateToSpecificProduct: User -> "Specific Product Page"
+        RequestProductData: "Specific Product Page" -> "Products Server"
+        GetSpecificProductData: "Products Server" -> "Database"
+        ReturnProductSpecifications: "Products Server" <- "Database"
+
+        #ifndef SocialMediaLinks
+        
+            ClickSocialMediaButton: "Specific Product Page" -> "Redirect to Social-Media"
+            AcquireBonusPoints: "Specific Product Page" -> "Bonus Points Page"
+            RequestUserData: "Bonus Points Page" -> "User Server"
+            GetUserData: "User Server" -> "Database"
+            ReturnBonusPoints: "User Server" <- "Database"
+
+        #else
+
+            ReturnNotFoundError: "Products Server" -> "Specific Product Page"
+            DisplayErr: "Specific Product Page" -> "Specific Product Page"
+            
+
+        #endif /* emptySocialMediaButton */
+
+    } /* Share on Social Media */
+    
+}
