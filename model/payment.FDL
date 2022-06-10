@@ -1,23 +1,69 @@
 #include "project-inc.FDL"
 
-feature "Payment" {
+feature "Checkout" {
 
-    heading "Payment"
+    heading "Checkout"
     
        sequence "Payment" {
-            AccesMeeting: User -> "Payment Page" 
-            SendData("for premium meetings"): "Payment Page" -> "Payment System"
-            OkData: "Payment Page" <- "Payment System"
-            PaymentDetails: User -> "Payment Page"
-            PaymentProcess: "Payment Page" -> "Payment System" 
-            PaymentProcess: "Payment System" -> Bank
-            OkProcess: "Payment System" <- Bank
-            OkProcess: "Payment Page" <- "Payment System"
-            ConfirmPayment: "Payment Page" -> "Payment System"
-            ConfirmPayment: "Payment System" -> Bank
-            Confirmated: "Payment System" <- Bank
-            Confirmated: "Payment Page" <- "Payment System"
-            AccesMeeting: User ->"Meeting Page" 
-            AccesMeetingAllowed: User <-"Meeting Page"
-       }
+          NavigateToSpecificProduct: User -> "Specific Product Page"
+          ValidateUserIsRegistered: "Specific Product Page" -> "Authentication"
+          ValidateJWT: "Authentication" -> "Authentication"
+          UserValid(ok): "Authentication" -> "Specific Product Page"
+
+          #ifndef notAuthenticated
+               ShowBuyButton: "Specific Product Page" -> "Specific Product Page"
+               ClickBuyButton: User -> "Specific Product Page"
+               RequestAddOrder: "Specific Product Page" -> "App Server"
+               AddOrderToDb: "App Server" -> "Database"
+               ReturnOrder: "Database" -> "App Server"
+               ReturnOK: "App Server" -> "Specific Product Page"
+               StartPaymentProcess: "Specific Product Page" -> "Paypal"
+               AuthorizePayment: User -> "Paypal"
+               ProcessPayment: "Paypal" -> "Paypal"
+               SendIPN: "Paypal" -> "App Server"
+               UpdatePaymentInfo: "App Server" -> "Database"
+               UpdateInfo: "Database" -> "Database"
+               ReturnUpdatedOrder: "Database" -> "App Server"
+               SendOKStatus: "App Server" -> "Specific Product Page"
+               DisplaySuccessMessage: "Specific Product Page" -> "Specific Product Page"
+          #else 
+
+          #endif /* notAuthenticated */ 
+     }
+
+     sequence "View Shopping Cart"{
+          NavigateToMyCart: "Registered Customer" -> "My Cart Page"
+          RequestMyCartData: "My Cart Page" -> "App Server"
+          ValidateUserIsRegistered: "App Server" -> "Authentication"
+          ValidateJWT: "Authentication" -> "Authentication"
+          UserValid(ok): "Authentication" -> "App Server"
+
+          #ifndef notAuthenticated
+               RequestCart: "App Server" -> "Database"
+               GetCart: "Database"-> "Database"
+               ReturnCartItems(cartItems): "Database" -> "App Server"
+               SendItems(cartItems): "App Server" -> "My Cart Page"
+               ShowItems: "My Cart Page" -> "My Cart Page"
+          #else 
+               RedirectToLogin: "App Server" -> "Login Page"
+          #endif /* notAuthenticated */ 
+     }
+
+     sequence "Increase/Decrease number of items" {
+          ClickIncreaseOrDecrease: "Registered Customer" -> "My Cart Page"
+          RequestUpdate(itemId, quantity): "My Cart Page" -> "App Server"
+          ValidateUserIsRegistered: "App Server" -> "Authentication"
+          ValidateJWT: "Authentication" -> "Authentication"
+          UserValid(ok): "Authentication" -> "App Server"
+
+          #ifndef notAuthenticated
+               UpdateCartItemQuantity(itemId, quantity): "App Server" -> "Database"
+               UpdateItem(itemId, quantity): "Database"-> "Database"
+               ReturnUpdatedItem(item): "Database" -> "App Server"
+               SendItem(item): "App Server" -> "My Cart Page"
+               ShowUpdatedItemData: "My Cart Page" -> "My Cart Page"
+          #else 
+               RedirectToLogin: "App Server" -> "Login Page"
+          #endif /* notAuthenticated */
+     }
 }

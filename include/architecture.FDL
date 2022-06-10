@@ -3,12 +3,12 @@ as demonstrated in this example. If your are modeling a less complex system,
 you may choose a 4, 3, 2 or 1 tier architecture. */
 
 /* Tier 5: System declaration */
-system: "Virtual Space Meeting"
+system: "Cheap Electronics WebStore"
 
 /* Tier 4: Subsystem declaration */
-subsystem: Server in "Virtual Space Meeting"
-subsystem: Actor in "Virtual Space Meeting"
-subsystem: Client in "Virtual Space Meeting"
+subsystem: Server in "Cheap Electronics WebStore"
+subsystem: Actor in "Cheap Electronics WebStore"
+subsystem: Client in "Cheap Electronics WebStore"
 
 /* Tier 3: Module declaration  */
 module : "Database Module" in Server
@@ -45,7 +45,11 @@ eternal : "Database" in "Database Component"
 eternal : "Management Server" in "Web Server Component"
 eternal : "BigBlueButton Server" in "Web Server Component"
 eternal : "Chat Interface" in "Web Client Component"
-eternal : "Payment Page" in "Web Client Component"
+eternal : "Payment Page" in "Web Client Component" // site
+eternal : "App Server" in "Web Client Component"  // web server
+eternal : "Paypal" in "Web Client Component" // paypal
+eternal : "Specific Product Page" in "Web Client Component"
+eternal : "My Cart Page" in "Web Client Component"
 eternal : "Bank" in "Bank Component"
 eternal : "Payment System" in "Web Server Component" 
 eternal : "Meeting Page" in "Web Client Component"

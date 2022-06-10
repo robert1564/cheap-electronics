@@ -5,20 +5,20 @@ feature "Authentication" {
 heading "Authentication"
 
    sequence "Login" {
-
+      NavigateToLoginPage: "Unregistered Customer" -> "Login Page"
       EnterUserCredidentials (username, password): User -> "Login Page"
-      SendUserInfo: "Login Page" -> Authentication
+      SendUserInfo: "Login Page" -> "App Server"
+      SendInfo: "App Server" -> Authentication
       ValidateUserCredentials: Authentication -> Database
+      CredentialsOk: Database -> Authentication
 
-      #ifdef UserCredentialsError
+      #ifndef UserCredentialsError
+         OK: Authentication -> "App Server"
+         RedirectUserToTheHomePage: "App Server" -> "Products Page"
+      #else 
          InvalidUserCredentials: "Login Page" <- Authentication
          InformUnacceptedUser: User <- "Login Page"
-      #else 
-         UserLoginAcc: "Login Page" <- Authentication
-         RedirectUserToTheHomePage: "Login Page" -> "Home Page"
-      #endif /* UserCredentialsError
-       */
-       // test
+      #endif /* UserCredentialsError*/
    }
 
    sequence "Client Registration" {
